@@ -5,7 +5,6 @@
 // constants stand for settings & iterating over scene grid
 
 
-
 class StackAttack
 {
 private:
@@ -25,42 +24,82 @@ private:
 		case 'w':
 			// player jumps
 			// check for blocks & destroy if there is one
-			if((sceneGrid[player.x+1][player.y]!=' ' && player.x+1<rows) || (player.x==rows-1) )
+			if(sceneGrid[player.x+1][player.y] == '#' || (player.x) == rows - 1)
 			{	
-				playerUp = sceneGrid[player.x][player.y - 2];
-
-			// destroy block
-				if (playerUp == '#')
-				sceneGrid[player.x - 2][player.y] = ' ';
-
-			// move player up
-				player.x -= 1;
+				if (sceneGrid[player.x - 1][player.y] == '#') // Если сверху блок - разбиваем
+				{
+					sceneGrid[player.x - 1][player.y] == '*';
+					player.x -= 1;
+					return true;
+				}
+				else  // просто зависаем
+				{
+					player.x -= 1;
+					return true;
+				}
 			}
-			return true;
+			else if (sceneGrid[player.x + 1][player.y] == '*') // снизу пусто - падаем
+			{
+				player.x += 1;
+				return true;
+			}
+			else 
+				return false;
+
+			
+
 		case 'd':
 			// player moves right
 			// check for blocks & try to move block & move player
-			if (!(player.y < cols - 1))
+			if (!(player.y < cols - 1)) // Если хотим просто сдвигать в бок за поле
 				return true;
 			
-			playerSideBottom = sceneGrid[player.x][player.y + 1];
-			 playerSideUp = sceneGrid[player.x - 1][player.y + 1];
+			playerSideBottom = sceneGrid[player.x][player.y + 1]; // правая клетка
+			 playerSideUp = sceneGrid[player.x - 1][player.y + 1]; // голова правой клетки
 			
-			if (playerSideBottom == ' ' )
+			if (playerSideBottom == '*' )
 			{
-				if (playerSideUp == ' ')
-					player.y += 1;
-				else return true;
+				if (playerSideUp == '*')
+				{
+					if (sceneGrid[player.x + 1][player.y + 1] == '*')
+					{
+						player.y += 1;
+						player.x += 1;
+						return true;
+					}
+					else
+					{
+						player.y += 1;
+						return true;
+					}
+
+				}
+				else 
+				{
+					return false;
+				}
 
 			}
 			else
 			{
-				if (sceneGrid[player.x][player.y + 2] == ' ' && sceneGrid[player.x - 1][player.y + 1] !='#')
+				if (sceneGrid[player.x - 1][player.y + 1] == '*')
 				{
-					sceneGrid[player.x][player.y + 2] = '#';
-					sceneGrid[player.x][player.y + 1] = ' ';
-					player.y += 1;
+					if (sceneGrid[player.x][player.y + 2] == '*')
+					{
+						sceneGrid[player.x][player.y + 2] = '#';
+						sceneGrid[player.x][player.y + 1] = '*';
+						player.y += 1;
+						return true;
+					}
+					else
+					{
+						return true;
+					}
 				}
+				else
+					return true;
+
+				
 			}
 			
 			return true;
@@ -73,21 +112,46 @@ private:
 			 playerSideBottom = sceneGrid[player.x][player.y - 1];
 			 playerSideUp = sceneGrid[player.x - 1][player.y - 1];
 
-			if (playerSideBottom == ' ')
+			if (playerSideBottom == '*') // рядом пусто
 			{
-				if (playerSideUp == ' ')
-					player.y -= 1;
-				else return true;
+				if (playerSideUp == '*')  // сверху пусто
+				{
+					if (sceneGrid[player.x + 1][player.y - 1] == '*')
+					{
+						player.x += 1;
+						player.y -= 1;
+						return true;
+					}
+					else
+					{
+						player.y -= 1;
+						return true;
+					}
+				}
+				else 
+					return false;
 
 			}
 			else
 			{
-				if (sceneGrid[player.x][player.y - 2] == ' ')
+				if (sceneGrid[player.x - 1][player.y - 1] == '*')
 				{
-					sceneGrid[player.x][player.y - 2] = '#';
-					sceneGrid[player.x][player.y - 1] = ' ';
-					player.y -= 1;
+					if (sceneGrid[player.x][player.y - 2] == '*')
+					{
+						sceneGrid[player.x][player.y - 2] = '#';
+						sceneGrid[player.x][player.y - 1] = '*';
+						player.y -= 1;
+						return true;
+					}
+					else
+					{
+						return true;
+					}
 				}
+				else
+					return true;
+
+				
 			}
 			return true;
 		default: 
@@ -101,7 +165,7 @@ public:
 		// initilize scene grid with empty space
 		for (int i = 0; i < rows; ++i)
 			for (int j = 0; j < cols; ++j)
-				sceneGrid[i][j] = ' ';
+				sceneGrid[i][j] = '*';
 
 		// spawn play & align it vertically & horizontally (imperfect as grid width is not even)
 		player = { 6, 6 };
@@ -113,27 +177,22 @@ public:
 
 	void Render()
 	{
-		for (int i = 0; i < rows; ++i)
+		int c = 0;
+		for (int i = 0; i < rows; i++)
 		{
-			for (int j = 0; j < cols; ++j)
+			for (int j = 0; j < cols; j++)
 			{
-				if (sceneGrid[player.x + 1][j] != ' ' && (player.x+1)!=rows-1)
+				
+				if ((player.x - 1 == i && player.y == j) ||
+					(player.x == i && player.y == j))
 				{
-					if ((player.x == i && player.y == j) ||
-						(player.x - 1 == i && player.y == j))
-						std::cout << "% ";
-					else std::cout << sceneGrid[i][j];
+					std::cout << "%";
 				}
-				else 
-				{
-					//Нужно сделать падение 
-					if ((player.x+1 == i && player.y == j) ||
-						(player.x == i && player.y == j))
-						std::cout << "% ";
-					else std::cout << sceneGrid[i][j];
-				}
+				else
+					std::cout << sceneGrid[i][j];
+
+				
 			}
-		
 			std::cout << std::endl;
 		}
 	}
@@ -142,7 +201,7 @@ public:
 	void block_rand()
 	{
 		srand(time(NULL));
-		int y = rand() % rows;
+		int y = rand() % cols;
 		sceneGrid[0][y] = '#';
 	}
 
@@ -152,27 +211,33 @@ public:
 	{
 		if (UpdatePlayer(input))
 		{
-			// sceneGrid[player]
+			// scenegrid[player]
+			// проверить, есть ли полный нижний ряд, убрать его, сдвинуть матрицу на строку вниз
+
 			for (int i = 0; i < rows; i++)
 			{
-				for(int j = 0; j < cols;j++)
+				for(int j = 0; j < cols; j++)
 				{
-					if (player.x-1 == 0 || player.x-1 == 1)
+					if (player.x-1 == 0 || player.x-1 == 1)  // если на верхних 2 линиях - сразу проиграл 
 						return false;
 					else
-						if (sceneGrid[i][j] == '#' && i != rows-1)
+					{
+						if (sceneGrid[i][j] == '#' && i != rows - 1) // нашли кубик
 						{
-							if (player.x - 1 == i && player.y == j)
+							if (sceneGrid[i + 1][j] == '*' ) // если под ним пусто - падает на 1 
 							{
-								return false;
-							}
-							else
-							{
-								//Нужно сделать падение блока только на одну клетку за цикл
-								sceneGrid[i][j] = ' ';
+								sceneGrid[i][j] = '*';
 								sceneGrid[i + 1][j] = '#';
+								i = i + 1;
 							}
+							else // # or floor под ним кубик или пол
+							{
+								return true;
+							}
+							
 						}
+					}
+
 				}
 			}
 
@@ -180,6 +245,8 @@ public:
 		}
 		return true;
 	}
+
+	
 };
 
 /*
