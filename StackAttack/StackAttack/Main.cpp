@@ -1,9 +1,14 @@
 #include<iostream>;
-#include "Game.h";
 #include<conio.h>;
 #include <ctime>;
 // constants stand for settings & iterating over scene grid
 
+struct Point
+{
+public:
+	int x;
+	int y;
+};
 
 class StackAttack
 {
@@ -160,6 +165,8 @@ private:
 	}
 
 public:
+	short score = 0;
+
 	StackAttack()
 	{
 		// initilize scene grid with empty space
@@ -250,9 +257,11 @@ public:
 			}
 		}
 
-		if (canDelete)
+		if (canDelete) {
 			for (int i = 0; i < cols; ++i)
 				sceneGrid[rows - 1][i] = '*';
+			score++;
+		}
 	}
 	
 };
@@ -300,7 +309,7 @@ int main()
 		counter++;
 	} while (game.Update(_getch()));
 
-	std::cout << std::endl << "You lost" << std::endl;
+	std::cout << std::endl << "You lost, your score is " << game.score << std::endl;
 
 	return 0;
 }
