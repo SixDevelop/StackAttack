@@ -236,10 +236,24 @@ public:
 							sceneGrid[i][j] = '*';
 							sceneGrid[i + 1][j] = '#';
 						}
-						else if (player.x - 2 == i && player.y == j)
+						if(sceneGrid[i+1][j] == sceneGrid[player.x-1][player.y])
 						{
 							return false;
 						}
+
+						/*switch (sceneGrid[i+1][j])
+						{
+						case '*':
+							sceneGrid[i][j] = '*';
+							sceneGrid[i + 1][j] = '#';
+							break;
+						case '%':
+							return false;
+							break;
+
+						default:
+							break;
+						}*/
 					}
 					
 				}
