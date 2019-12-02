@@ -4,8 +4,8 @@ C:\Users\dmitr\Documents\GitHub\StackAttack\StackAttack\StackAttack\Main.cpp(2,1
 C:\Users\dmitr\Documents\GitHub\StackAttack\StackAttack\StackAttack\Main.cpp(3,9): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\dmitr\Documents\GitHub\StackAttack\StackAttack\StackAttack\Main.cpp(4,10): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
 C:\Users\dmitr\Documents\GitHub\StackAttack\StackAttack\StackAttack\Main.cpp(31,40): warning C4553: "==": результат выражения не используется; вы хотели использовать "="?
-C:\Users\dmitr\Documents\GitHub\StackAttack\StackAttack\StackAttack\Main.cpp(115,1): warning C4804: >: небезопасное использование типа "bool" в операции
+C:\Users\dmitr\Documents\GitHub\StackAttack\StackAttack\StackAttack\Main.cpp(109,1): warning C4804: >: небезопасное использование типа "bool" в операции
 C:\Users\dmitr\Documents\GitHub\StackAttack\StackAttack\StackAttack\Main.cpp(21,8): warning C4101: playerUp: неиспользованная локальная переменная
-C:\Users\dmitr\Documents\GitHub\StackAttack\StackAttack\StackAttack\Main.cpp(209,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-C:\Users\dmitr\Documents\GitHub\StackAttack\StackAttack\StackAttack\Main.cpp(282,7): warning C4101: input: неиспользованная локальная переменная
+C:\Users\dmitr\Documents\GitHub\StackAttack\StackAttack\StackAttack\Main.cpp(203,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+C:\Users\dmitr\Documents\GitHub\StackAttack\StackAttack\StackAttack\Main.cpp(311,7): warning C4101: input: неиспользованная локальная переменная
   StackAttack.vcxproj -> C:\Users\dmitr\Documents\GitHub\StackAttack\StackAttack\Debug\StackAttack.exe

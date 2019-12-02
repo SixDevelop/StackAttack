@@ -214,38 +214,46 @@ public:
 			// scenegrid[player]
 			// проверить, есть ли полный нижний ряд, убрать его, сдвинуть матрицу на строку вниз
 
-			for (int i = 0; i < rows; i++)
-			{
-				for(int j = 0; j < cols; j++)
-				{
-					if (player.x-1 == 0 || player.x-1 == 1)  // если на верхних 2 линиях - сразу проиграл 
-						return false;
-					else
-					{
-						if (sceneGrid[i][j] == '#' && i != rows - 1) // нашли кубик
-						{
-							if (sceneGrid[i + 1][j] == '*' ) // если под ним пусто - падает на 1 
-							{
-								sceneGrid[i][j] = '*';
-								sceneGrid[i + 1][j] = '#';
-								i = i + 1;
-							}
-							else // # or floor под ним кубик или пол
-							{
-								return true;
-							}
-							
-						}
-					}
+			if (player.x - 1 == 0 || player.x - 1 == 1)  // если на верхних 2 линиях - сразу проиграл 
+				return false;
 
+			for (int i = rows - 2; i > -1; --i)
+			{
+				for (int j = cols - 1; j > -1; --j)
+				{
+					if (sceneGrid[i][j] == '#')
+					{
+						if (sceneGrid[i + 1][j] == '*')
+						{
+							sceneGrid[i][j] = '*';
+							sceneGrid[i + 1][j] = '#';
+						}
+						else if (sceneGrid[i + 1][j] == '%')
+							return false;
+					}
 				}
 			}
-
-
+			ProcessBottomLine();
 		}
 		return true;
 	}
 
+	void ProcessBottomLine()
+	{
+		bool canDelete = true;
+		for (int i = 0; i < cols; ++i)
+		{
+			if (sceneGrid[rows - 1][i] != '#')
+			{
+				canDelete = false;
+				break;
+			}
+		}
+
+		if (canDelete)
+			for (int i = 0; i < cols; ++i)
+				sceneGrid[rows - 1][i] = '*';
+	}
 	
 };
 
