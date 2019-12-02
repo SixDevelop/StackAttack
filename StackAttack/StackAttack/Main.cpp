@@ -31,10 +31,11 @@ private:
 			// check for blocks & destroy if there is one
 			if(sceneGrid[player.x+1][player.y] == '#' || (player.x) == rows - 1)
 			{	
-				if (sceneGrid[player.x - 1][player.y] == '#') // Если сверху блок - разбиваем
+				if (sceneGrid[player.x - 2][player.y] == '#') // Если сверху блок - разбиваем
 				{
-					sceneGrid[player.x - 1][player.y] == '*';
-					player.x -= 1;
+					for (int i = player.x; i > 1; i--) {
+						sceneGrid[i][player.y] = '*';
+					}
 					return true;
 				}
 				else  // просто зависаем
@@ -235,9 +236,12 @@ public:
 							sceneGrid[i][j] = '*';
 							sceneGrid[i + 1][j] = '#';
 						}
-						else if (sceneGrid[i + 1][j] == '%')
+						else if (player.x - 2 == i && player.y == j)
+						{
 							return false;
+						}
 					}
+					
 				}
 			}
 			ProcessBottomLine();
