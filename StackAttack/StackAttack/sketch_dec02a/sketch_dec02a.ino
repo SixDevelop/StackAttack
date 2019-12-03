@@ -556,7 +556,7 @@ public:
                 }
                 else if(_chosenOption == 2)
                 {
-                  //Меняем сложность(скорость) от 0 до 3
+                  //Change difficult (0-3)
                   if(digitalRead(RIGHT_pin)==LOW)
                   if(difficulty == 3)
                     difficulty = 0;
@@ -639,7 +639,7 @@ public:
               LCD.setPixel(size*j+_j,size*i+_i);
        
     }
-
+  //rendering only player
   void Render()
   {
     for (int i = 0; i < rows; i++)
@@ -661,7 +661,7 @@ public:
     }
   }
 
-
+  //randomaiser
   void block_rand()
   {
     
@@ -670,15 +670,15 @@ public:
   }
 
 
-
+  //logic of dropping blocks and kiiling player by them
   bool Update()
   {
     if (UpdatePlayer())
     {
       // scenegrid[player]
-      // ïðîâåðèòü, åñòü ëè ïîëíûé íèæíèé ðÿä, óáðàòü åãî, ñäâèíóòü ìàòðèöó íà ñòðîêó âíèç
+      
 
-      if (player.x - 1 == 0 || player.x - 1 == 1)  // åñëè íà âåðõíèõ 2 ëèíèÿõ - ñðàçó ïðîèãðàë 
+      if (player.x - 1 == 0 || player.x - 1 == 1)  // if player on top 2 lines he dies
         return false;
 
       for (int i = rows - 2; i > -1; --i)
@@ -687,12 +687,12 @@ public:
         {
           if (sceneGrid[i][j] == '#')
           {
-            if (sceneGrid[i + 1][j] == '*')
+            if (sceneGrid[i + 1][j] == '*')//dropping blocks
             {
               sceneGrid[i][j] = '*';
               sceneGrid[i + 1][j] = '#';
             }
-            if(sceneGrid[i+1][j] == sceneGrid[player.x-1][player.y])
+            if(sceneGrid[i+1][j] == sceneGrid[player.x-1][player.y])//killing player
             {
               return false;
             }
@@ -704,6 +704,7 @@ public:
     return true;
   }
 
+  //checking and clear bottom line
   void ProcessBottomLine()
   {
     bool canDelete = true;
