@@ -110,16 +110,22 @@ private:
 
         }
         else 
-        {
-          return false;
-        }
+         {
+            if (sceneGrid[player.x - 1][player.y + 2] == '*' && player.y + 1 != 0)
+          {
+            sceneGrid[player.x - 1][player.y + 2] = '#';
+            sceneGrid[player.x - 1][player.y + 1] = '*';
+            player.y += 1;
+            return true;
+          }
+          }
 
       }
       else
       {
         if (sceneGrid[player.x - 1][player.y + 1] == '*')
         {
-          if (sceneGrid[player.x][player.y + 2] == '*')
+          if (sceneGrid[player.x][player.y + 2] == '*' && player.y != 10)
           {
             sceneGrid[player.x][player.y + 2] = '#';
             sceneGrid[player.x][player.y + 1] = '*';
@@ -166,14 +172,21 @@ private:
           }
         }
         else 
-          return false;
+          if (sceneGrid[player.x - 1][player.y - 2] == '*' && player.y - 1 != 0)
+          {
+            sceneGrid[player.x-1][player.y - 2] = '#';
+            sceneGrid[player.x-1][player.y - 1] = '*';
+            player.y -= 1;
+            return true;
+          }
+          return true;
 
       }
       else
       {
         if (sceneGrid[player.x - 1][player.y - 1] == '*')
         {
-          if (sceneGrid[player.x][player.y - 2] == '*')
+          if (sceneGrid[player.x][player.y - 2] == '*' && player.y != 1)
           {
             sceneGrid[player.x][player.y - 2] = '#';
             sceneGrid[player.x][player.y - 1] = '*';
@@ -193,6 +206,8 @@ private:
       return true;
       }
   }
+
+  
 
 public:
   uint8_t score = 0;
@@ -280,6 +295,9 @@ public:
           }
         }
     }
+
+
+    
     
     void CalcRecords(String _name, int _score)
     {
@@ -431,10 +449,15 @@ public:
         
         GameOver();*/
         int gameSpeed = 1000;
-        gameSpeed -= difficulty * 100;
+        gameSpeed -= difficulty * 200;
         int counter = 0;
+        Refrash();
         do
       {
+        if (counter % 3 == 0)
+        {
+          Falling();
+        }
         
         if (counter % 7 == 0)
         {
@@ -615,8 +638,16 @@ public:
         delay(100);        
       }
     }
+
+void Falling(){
+  for (int i = 0; i < rows; ++i)
+      for (int j = 0; j < cols; ++j)
+        if(sceneGrid[player.x + 1][player.y] == '*')
+        player.x += 1;
   
-  StackAttack()
+}
+  
+  void Refrash()
   {
     // initilize scene grid with empty space
     for (int i = 0; i < rows; ++i)

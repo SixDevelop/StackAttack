@@ -82,7 +82,12 @@ private:
 				}
 				else 
 				{
-					return false;
+					if (player.y != 10) {
+						sceneGrid[player.x][player.y + 2] = '#';
+						sceneGrid[player.x][player.y + 1] = '*';
+						player.y += 1;
+						return true;
+					}
 				}
 
 			}
@@ -90,7 +95,7 @@ private:
 			{
 				if (sceneGrid[player.x - 1][player.y + 1] == '*')
 				{
-					if (sceneGrid[player.x][player.y + 2] == '*')
+					if (sceneGrid[player.x][player.y + 2] == '*' && player.y != 10)
 					{
 						sceneGrid[player.x][player.y + 2] = '#';
 						sceneGrid[player.x][player.y + 1] = '*';
@@ -134,15 +139,21 @@ private:
 						return true;
 					}
 				}
-				else 
-					return false;
+				else {
+					if (player.y != 1) {
+						sceneGrid[player.x][player.y - 2] = '#';
+						sceneGrid[player.x][player.y - 1] = '*';
+						player.y -= 1;
+						return true;
+					}
+				}
 
 			}
 			else
 			{
 				if (sceneGrid[player.x - 1][player.y - 1] == '*')
 				{
-					if (sceneGrid[player.x][player.y - 2] == '*')
+					if (sceneGrid[player.x][player.y - 2] == '*' && player.y != 1)
 					{
 						sceneGrid[player.x][player.y - 2] = '#';
 						sceneGrid[player.x][player.y - 1] = '*';
