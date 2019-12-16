@@ -22,8 +22,8 @@ public:
 class StackAttack
 {
 private:
-  static const uint8_t rows = 7;
-  static const uint8_t cols = 12;
+  static const uint8_t rows = 9;
+  static const uint8_t cols = 14;
   bool gameover = false;
   uint8_t _isPlaying = 0;
   //settings
@@ -220,6 +220,7 @@ public:
       
       LCD.print("Score:",0,16);
       LCD.printNumI(score,40,16);
+      score = 0;
       LCD.print("Press Any Key",0,24);
       LCD.print("To Continue",0,32);
       LCD.update();
@@ -472,8 +473,8 @@ public:
         delay(gameSpeed);
       } while (Update());
       LCD.clrScr();
-        
         GameOver();
+        
         
     }
   //call menu
@@ -568,12 +569,12 @@ public:
                 {
                   //change size from 1 to 3
                   if(digitalRead(RIGHT_pin)==LOW)
-                  if(size == 3)
-                    size = 1;
+                  if(size == 5)
+                    size = 3;
                   else size++;
                 else if(digitalRead(LEFT_pin)==LOW)
-                  if(size == 1)
-                    size = 3;
+                  if(size == 3)
+                    size = 5;
                   else size--;
                   EEPROM.put(0, size);
                 }
@@ -652,10 +653,17 @@ void Falling(){
     // initilize scene grid with empty space
     for (int i = 0; i < rows; ++i)
       for (int j = 0; j < cols; ++j)
-        sceneGrid[i][j] = '*';
+        if (i == 0 || i == rows - 1 || j == 0 || j == cols - 1)
+        {
+          sceneGrid[i][j] = '#';
+        }
+        else
+        {
+          sceneGrid[i][j] = '*';
+        }
 
     // spawn play & align it vertically & horizontally (imperfect as grid width is not even)
-    player = { 6, 6 };
+    player = { 7, 6 };
 
     // draw player renders
     // sceneGrid[6][6] = '%';
@@ -673,15 +681,32 @@ void Falling(){
   //rendering only player
   void Render()
   {
+    LCD.printNumI(score,72,0);
     for (int i = 0; i < rows; i++)
     {
       for (int j = 0; j < cols; j++)
       {
         
-        if (sceneGrid[i][j] != '*'  || (player.x - 1 == i && player.y == j) ||
+        if (sceneGrid[i][j] != '*')
+          { 
+            if((i==0) ||(i== rows-1) || (j==0) || (j==cols-1))
+            {
+              for (uint8_t _i = 0; _i < size; ++_i)
+                for (uint8_t _j = 0; _j < size; ++_j)
+                 if((_i==0) ||(_i== size-1) || (_j==0) || (_j==size-1) ||(_i == _j))
+                     LCD.setPixel(size*j+_j,size*i+_i);
+              }
+            else
+            Print(i,j);
+          }
+        else if((player.x - 1 == i && player.y == j) ||
          (player.x == i && player.y == j))
         {
-          Print(i,j);
+          //Print(i,j);
+          for (uint8_t _i = 0; _i < size; ++_i)
+          for (uint8_t _j = 0; _j < size; ++_j)
+              if((_i==0) ||(_i== size-1) || (_j==0) || (_j==size-1))
+              LCD.setPixel(size*j+_j,size*i+_i);
         }
         //else
         //  std::cout << sceneGrid[i][j];
@@ -696,8 +721,8 @@ void Falling(){
   void block_rand()
   {
     
-    int y = rand() % cols;
-    sceneGrid[0][y] = '#';
+    int y = rand() % cols - 2;
+    sceneGrid[1][y + 1] = '#';
   }
 
 
@@ -712,7 +737,7 @@ void Falling(){
       if (player.x - 1 == 0 || player.x - 1 == 1)  // if player on top 2 lines he dies
         return false;
 
-      for (int i = rows - 2; i > -1; --i)
+      for (int i = rows - 2; i > 0; --i)
       {
         for (int j = cols - 1; j > -1; --j)
         {
@@ -741,7 +766,7 @@ void Falling(){
     bool canDelete = true;
     for (int i = 0; i < cols; ++i)
     {
-      if (sceneGrid[rows - 1][i] != '#')
+      if (sceneGrid[rows - 2][i] != '#')
       {
         canDelete = false;
         break;
@@ -749,8 +774,8 @@ void Falling(){
     }
 
     if (canDelete) {
-      for (int i = 0; i < cols; ++i)
-        sceneGrid[rows - 1][i] = '*';
+      for (int i = 1; i < cols - 1; ++i)
+        sceneGrid[rows - 2][i] = '*';
       score++;
     }
   }
